@@ -1,0 +1,3 @@
+﻿- Adicionar camada de abstracao
+- Usar sempre models nunca entities
+- Adicionar listagem de posts na pagina inicial

@@ -1,8 +1,19 @@
-﻿@{
+﻿@model IEnumerable<Blog.Data.Entities.Post>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@foreach (var item in Model)
+{
+    <div class="text-center">
+        <div class="card" style="width: 80rem;">
+            <div class="card-body">
+                <h5 class="card-title">@item.Title</h5>
+                <h6 class="card-subtitle mb-2 text-muted">@item.CreatedAt</h6>
+                <p class="card-text">@item.Content</p>
+                <a asp-action="Details" asp-controller="Posts" asp-route-id="@item.Id" class="card-link">Details</a> 
+            </div>
+        </div>
+    </div>
+}
