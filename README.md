@@ -6,7 +6,7 @@ Bem-vindo ao repositório do projeto **Blog Módulo 1**. Este projeto é uma ent
 O objetivo principal desenvolver uma aplicação de blog que permite aos usuários criar, editar, visualizar e excluir posts e comentários, tanto através de uma interface web utilizando MVC quanto através de uma API RESTful.
 Descreva livremente mais detalhes do seu projeto aqui.
 
-### **Autor(es)**
+### **Autor**
 - **Fabiano Marcolin Maciel**
 
 ## **2. Proposta do Projeto**
