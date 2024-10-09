@@ -8,22 +8,27 @@ using Microsoft.EntityFrameworkCore;
 using Blog.Data;
 using Blog.Data.Entities;
 using Blog.Web.Models;
+using AutoMapper;
+using Core.Handlers;
 
 namespace Blog.Web.Controllers
 {
     public class UsersController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly UserHandler _userHandler;
 
-        public UsersController(AppDbContext context)
+        public UsersController(AppDbContext context, IMapper mapper)
         {
             _context = context;
+            _userHandler = new UserHandler(context, mapper);
         }
 
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.ToListAsync());
+            return View(await _userHandler.GetUsers());
         }
 
         // GET: Users/Details/5
