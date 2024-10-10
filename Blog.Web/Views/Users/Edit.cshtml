@@ -1,4 +1,4 @@
-﻿@model Blog.Data.Entities.User
+﻿@model Blog.Core.Models.UserModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -31,6 +31,7 @@
                 <input asp-for="DateOfBirth" class="form-control" />
                 <span asp-validation-for="DateOfBirth" class="text-danger"></span>
             </div>
+            <input type="hidden" asp-for="CreatedAt" />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

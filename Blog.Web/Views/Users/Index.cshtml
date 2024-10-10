@@ -24,9 +24,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.DateOfBirth)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -47,9 +44,6 @@
                     @Html.DisplayFor(modelItem => item.DateOfBirth)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CreatedAt)
-                </td>
-                <td>
                     @if (item.Id > 1)
                     {
                         @Html.ActionLink("Edit |", "Edit", new { Id = item.Id })
@@ -59,7 +53,7 @@
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                     @if (item.Id > 1)
                     {
-                        @Html.ActionLink("Delete |", "Delete");
+                        @Html.ActionLink("Delete |", "Delete", new { Id = item.Id });
                     }
                 </td>
             </tr>

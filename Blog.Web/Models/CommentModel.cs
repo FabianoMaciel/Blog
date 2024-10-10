@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Blog.Core.Models;
+using System;
 
 namespace Blog.Web.Models
 {

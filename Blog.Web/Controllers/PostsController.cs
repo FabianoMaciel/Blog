@@ -1,6 +1,8 @@
-﻿using Blog.Data;
+﻿using Blog.Core.Models;
+using Blog.Data;
 using Blog.Data.Entities;
 using Blog.Web.Models;
+using Core.Handlers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,18 +11,19 @@ namespace Blog.Web.Controllers
 {
     public class PostsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IPostHandler _postHandler;
+        private readonly IUserHandler _userHandler;
 
-        public PostsController(AppDbContext context)
+        public PostsController(IPostHandler postHandler, IUserHandler userHandler)
         {
-            _context = context;
+            _postHandler = postHandler;
+            _userHandler = userHandler;
         }
 
         // GET: Posts
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Posts.Include(p => p.Autor);
-            return View(await appDbContext.ToListAsync());
+            return View(await _postHandler.GetAll());
         }
 
         // GET: Posts/Details/5
@@ -31,9 +34,7 @@ namespace Blog.Web.Controllers
                 return NotFound();
             }
 
-            var post = await _context.Posts
-                .Include(p => p.Autor)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var post = await _postHandler.Get(id.Value);
             if (post == null)
             {
                 return NotFound();
@@ -43,9 +44,9 @@ namespace Blog.Web.Controllers
         }
 
         // GET: Posts/Create
-        public IActionResult Create()
+        public async Task<IActionResult> CreateAsync()
         {
-            ViewData["AutorId"] = new SelectList(_context.Users, "Id", "Name");
+            ViewData["AutorId"] = new SelectList(await _userHandler.GetAll(), "Id", "Name");
             return View();
         }
 
@@ -58,11 +59,10 @@ namespace Blog.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(new Post { AutorId = model.AutorId, CreatedAt = DateTime.Now, Content = model.Content, Title = model.Title });
-                await _context.SaveChangesAsync();
+                await _postHandler.Add(model);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AutorId"] = new SelectList(_context.Users, "Id", "Name", model.AutorId);
+            ViewData["AutorId"] = new SelectList(await _userHandler.GetAll(), "Id", "Name", model.AutorId);
             return View(model);
         }
 
@@ -74,12 +74,13 @@ namespace Blog.Web.Controllers
                 return NotFound();
             }
 
-            var post = await _context.Posts.FindAsync(id);
+            var post = await _postHandler.Get(id.Value);
+
             if (post == null)
             {
                 return NotFound();
             }
-            ViewData["AutorId"] = new SelectList(_context.Users, "Id", "Name", post.AutorId);
+            ViewData["AutorId"] = new SelectList(await _userHandler.GetAll(), "Id", "Name", post.AutorId);
             return View(post);
         }
 
@@ -88,7 +89,7 @@ namespace Blog.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Content,CreatedAt,AutorId")] Post post)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Content,CreatedAt,AutorId")] PostModel post)
         {
             if (id != post.Id)
             {
@@ -99,12 +100,11 @@ namespace Blog.Web.Controllers
             {
                 try
                 {
-                    _context.Update(post);
-                    await _context.SaveChangesAsync();
+                    await _postHandler.Edit(post);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PostExists(post.Id))
+                    if (!_postHandler.Exists(post.Id))
                     {
                         return NotFound();
                     }
@@ -115,7 +115,7 @@ namespace Blog.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AutorId"] = new SelectList(_context.Users, "Id", "Name", post.AutorId);
+            ViewData["AutorId"] = new SelectList(await _userHandler.GetAll(), "Id", "Name", post.AutorId);
             return View(post);
         }
 
@@ -127,9 +127,7 @@ namespace Blog.Web.Controllers
                 return NotFound();
             }
 
-            var post = await _context.Posts
-                .Include(p => p.Autor)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var post = await _postHandler.Get(id.Value);
             if (post == null)
             {
                 return NotFound();
@@ -143,19 +141,8 @@ namespace Blog.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var post = await _context.Posts.FindAsync(id);
-            if (post != null)
-            {
-                _context.Posts.Remove(post);
-            }
-
-            await _context.SaveChangesAsync();
+            await _postHandler.Delete(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool PostExists(int id)
-        {
-            return _context.Posts.Any(e => e.Id == id);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model Blog.Data.Entities.Post
+﻿@model Blog.Core.Models.PostModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -25,6 +25,7 @@
                 <select asp-for="AutorId" class="form-control" asp-items="ViewBag.AutorId"></select>
                 <span asp-validation-for="AutorId" class="text-danger"></span>
             </div>
+            <input type="hidden" asp-for="CreatedAt" />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

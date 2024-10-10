@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Blog.Core.Models
 {
@@ -13,9 +14,11 @@ namespace Blog.Core.Models
         [Display(Name = "Administrator")]
         public bool IsAdmin { get; set; }
 
+        [BindProperty, DataType(DataType.Date)]
         [Display(Name = "Date of Birth")]
         public DateTime DateOfBirth { get; set; }
 
+        [BindProperty, DataType(DataType.Date)]
         public DateTime CreatedAt { get; set; }
     }
 }

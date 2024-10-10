@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+﻿using Blog.Core.Models;
 using Blog.Data;
-using Blog.Data.Entities;
-using Blog.Web.Models;
-using AutoMapper;
 using Core.Handlers;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Blog.Web.Controllers
 {
@@ -27,7 +20,7 @@ namespace Blog.Web.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            return View(await _userHandler.GetUsers());
+            return View(await _userHandler.GetAll());
         }
 
         // GET: Users/Details/5
@@ -38,8 +31,7 @@ namespace Blog.Web.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var user = await _userHandler.Get(id.Value);
             if (user == null)
             {
                 return NotFound();
@@ -59,14 +51,14 @@ namespace Blog.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Occupation,IsAdmin,DateOfBirth")] UserModel model)
+        public async Task<IActionResult> Create([Bind("Id,Name,Occupation,IsAdmin,DateOfBirth,CreatedAt")] UserModel model)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(new User { Name = model.Name, CreatedAt = DateTime.Now, DateOfBirth = model.DateOfBirth, IsAdmin = model.IsAdmin, Occupation = model.Occupation });
-                await _context.SaveChangesAsync();
+                model = await _userHandler.Add(model);
                 return RedirectToAction(nameof(Index));
             }
+
             return View(model);
         }
 
@@ -78,11 +70,13 @@ namespace Blog.Web.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userHandler.Get(id.Value);
+
             if (user == null)
             {
                 return NotFound();
             }
+
             return View(user);
         }
 
@@ -91,9 +85,9 @@ namespace Blog.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Occupation,IsAdmin,DateOfBirth,CreatedAt")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Occupation,IsAdmin,DateOfBirth,CreatedAt")] UserModel model)
         {
-            if (id != user.Id)
+            if (id != model.Id)
             {
                 return NotFound();
             }
@@ -102,12 +96,11 @@ namespace Blog.Web.Controllers
             {
                 try
                 {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
+                    await _userHandler.Edit(model);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.Id))
+                    if (!_userHandler.Exists(model.Id))
                     {
                         return NotFound();
                     }
@@ -118,7 +111,7 @@ namespace Blog.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            return View(model);
         }
 
         // GET: Users/Delete/5
@@ -129,8 +122,7 @@ namespace Blog.Web.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var user = await _userHandler.Get(id.Value);
             if (user == null)
             {
                 return NotFound();
@@ -144,19 +136,8 @@ namespace Blog.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user != null)
-            {
-                _context.Users.Remove(user);
-            }
-
-            await _context.SaveChangesAsync();
+            await _userHandler.Delete(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool UserExists(int id)
-        {
-            return _context.Users.Any(e => e.Id == id);
         }
     }
 }

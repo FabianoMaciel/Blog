@@ -1,18 +1,14 @@
-﻿using AutoMapper;
-using Blog.Core.Models;
-using Blog.Data;
-using Blog.Data.Entities;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Blog.Core.Models;
 
 namespace Core.Handlers
 {
     public interface IUserHandler
     {
-        Task<IEnumerable<UserModel>> GetUsers();
+        Task<IEnumerable<UserModel>> GetAll();
+        Task<UserModel> Add(UserModel model);
+        Task<UserModel> Get(int id);
+        Task<UserModel> Edit(UserModel model);
+        bool Exists(int id);
+        Task Delete(int id);
     }
 }

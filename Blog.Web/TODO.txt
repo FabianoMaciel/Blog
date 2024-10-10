@@ -1,3 +1,4 @@
-﻿- Adicionar camada de abstracao
-- Usar sempre models nunca entities
-- Adicionar listagem de posts na pagina inicial
+﻿-Adicionar comentarios MVC
+-Comecar a API
+
+--Adicionar seguranca e autorizacao
