@@ -19,6 +19,7 @@ namespace Blog.API.Controllers
 
         // GET: api/<UsersController>
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<UserModel>), StatusCodes.Status200OK)]
         public async Task<IEnumerable<UserModel>> GetAsync()
         {
             return await _userHandler.GetAll();
@@ -26,6 +27,8 @@ namespace Blog.API.Controllers
 
         // GET api/<UsersController>/5
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(UserModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAsync(int id)
         {
             var user = await _userHandler.Get(id);
@@ -37,6 +40,8 @@ namespace Blog.API.Controllers
 
         // POST api/<UsersController>
         [HttpPost]
+        [ProducesResponseType(typeof(UserModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] UserModel model)
         {
             var newUser = await _userHandler.Add(model);
@@ -45,6 +50,8 @@ namespace Blog.API.Controllers
 
         // PUT api/<UsersController>/5
         [HttpPut("{id}")]
+        [ProducesResponseType(typeof(UserModel), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> PutAsync(int id, [FromBody] UserModel model)
         {
             if (id != model.Id) return BadRequest();
@@ -56,10 +63,12 @@ namespace Blog.API.Controllers
 
         // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(UserModel), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Delete(int id)
         {
             if (!_userHandler.Exists(id))
-                return BadRequest();
+                return NotFound();
 
            await  _userHandler.Delete(id);
 
