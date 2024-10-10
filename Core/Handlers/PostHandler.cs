@@ -31,6 +31,8 @@ namespace Core.Handlers
             _context.Add(entity);
             await _context.SaveChangesAsync();
 
+            model.Id = entity.Id;
+
             return model;
         }
 
