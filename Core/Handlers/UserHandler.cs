@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace Core.Handlers
 {
-    public class UserHandler
+    public class UserHandler : IUserHandler
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
-        public UserHandler(AppDbContext context, IMapper mapper) 
+        public UserHandler(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

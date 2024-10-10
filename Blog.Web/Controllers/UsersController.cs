@@ -15,14 +15,13 @@ namespace Blog.Web.Controllers
 {
     public class UsersController : Controller
     {
+        private readonly IUserHandler _userHandler;
         private readonly AppDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly UserHandler _userHandler;
 
-        public UsersController(AppDbContext context, IMapper mapper)
+        public UsersController(IUserHandler userHandler, AppDbContext context)
         {
+            _userHandler = userHandler;
             _context = context;
-            _userHandler = new UserHandler(context, mapper);
         }
 
         // GET: Users
