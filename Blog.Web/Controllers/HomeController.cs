@@ -1,5 +1,6 @@
 using Blog.Data;
 using Blog.Web.Models;
+using Core.Handlers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -8,17 +9,16 @@ namespace Blog.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IPostHandler _postHandler;
 
-        public HomeController(AppDbContext context)
+        public HomeController(IPostHandler postHandler)
         {
-            _context = context;
+            _postHandler = postHandler;
         }
 
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Posts.Include(p => p.Autor);
-            return View(await appDbContext.ToListAsync());
+            return View(await _postHandler.GetAll());
         }
 
         public IActionResult Privacy()

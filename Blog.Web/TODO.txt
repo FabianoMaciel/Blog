@@ -1,4 +1,4 @@
 ﻿-Adicionar comentarios MVC
--Comecar a API
+-Adicionar comentarios na API
 
 --Adicionar seguranca e autorizacao

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Blog.Data.Entities;
+using System;
 
 namespace Blog.Core.Models
 {
@@ -15,5 +16,7 @@ namespace Blog.Core.Models
         public UserModel Autor { get; set; }
 
         public int AutorId { get; set; }
+
+        public List<Comment> Comments { get; set; }
     }
 }

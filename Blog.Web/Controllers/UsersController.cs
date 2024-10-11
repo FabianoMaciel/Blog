@@ -11,10 +11,9 @@ namespace Blog.Web.Controllers
         private readonly IUserHandler _userHandler;
         private readonly AppDbContext _context;
 
-        public UsersController(IUserHandler userHandler, AppDbContext context)
+        public UsersController(IUserHandler userHandler)
         {
             _userHandler = userHandler;
-            _context = context;
         }
 
         // GET: Users

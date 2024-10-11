@@ -37,10 +37,15 @@ namespace Blog.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PostId");
 
                     b.HasIndex("UserId");
 
@@ -108,8 +113,8 @@ namespace Blog.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 10, 9, 15, 25, 2, 517, DateTimeKind.Local).AddTicks(7321),
-                            DateOfBirth = new DateTime(2024, 10, 9, 15, 25, 2, 517, DateTimeKind.Local).AddTicks(7463),
+                            CreatedAt = new DateTime(2024, 10, 11, 23, 4, 53, 41, DateTimeKind.Local).AddTicks(1330),
+                            DateOfBirth = new DateTime(2024, 10, 11, 23, 4, 53, 41, DateTimeKind.Local).AddTicks(1378),
                             IsAdmin = true,
                             Name = "Administrator",
                             Occupation = "System Admin"
@@ -118,11 +123,19 @@ namespace Blog.Data.Migrations
 
             modelBuilder.Entity("Blog.Data.Entities.Comment", b =>
                 {
+                    b.HasOne("Blog.Data.Entities.Post", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Blog.Data.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Post");
 
                     b.Navigation("User");
                 });

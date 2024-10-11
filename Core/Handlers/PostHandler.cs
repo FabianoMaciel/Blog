@@ -18,7 +18,7 @@ namespace Core.Handlers
 
         public async Task<IEnumerable<PostModel>> GetAll()
         {
-            var entities = await _context.Posts.Include(p => p.Autor).ToListAsync();
+            var entities = await _context.Posts.Include(p => p.Autor).Include(a => a.Comments).ToListAsync();
             var models = entities.Select(a => _mapper.Map<PostModel>(a));
 
             return models;

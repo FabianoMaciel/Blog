@@ -14,12 +14,9 @@ namespace Core
         public MappingProfile()
         {
             CreateMap<User, UserModel>();
-            // .ForMember(dest => dest.CreatedAt, opt => opt.Ignore());
             CreateMap<Post, PostModel>();
             CreateMap<Comment, CommentModel>();
             CreateMap<UserModel, User>();
-              //  .ForMember(dest => dest.CreatedAt, opt => opt.Ignore());
-
             CreateMap<PostModel, Post>();
             CreateMap<CommentModel, Comment>();
         }

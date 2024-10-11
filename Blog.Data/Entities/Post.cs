@@ -13,5 +13,7 @@
         public User Autor { get; set; }
 
         public int AutorId { get; set; }
+
+        public List<Comment> Comments { get; set; }
     }
 }
