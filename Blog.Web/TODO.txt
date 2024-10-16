@@ -1,4 +1,4 @@
-﻿-Adicionar seguranca e autorizacao
--Usuario login e etc
+﻿-Usuario login no MVC
+-limitar acessor por roles
 -Adicionar comentarios na API
 
