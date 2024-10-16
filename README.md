@@ -1,3 +1,5 @@
+# *** NOTE PARA EDUARDO: Ler TODO.txt para saber os proximos passos da minha implementacao 
+
 # **Blog Módulo 1 - Aplicação de Blog Simples com MVC e API RESTful**
 
 ## **1. Apresentação**
