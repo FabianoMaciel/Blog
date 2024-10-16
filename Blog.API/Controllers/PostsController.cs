@@ -2,6 +2,7 @@
 using Core.Handlers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,11 +13,20 @@ namespace Blog.API.Controllers
     [ApiController]
     public class PostsController : ControllerBase
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPostHandler _postHandler;
-        public PostsController(IPostHandler postHandler)
+
+        public PostsController(IHttpContextAccessor httpContextAccessor, IPostHandler postHandler)
         {
+            _httpContextAccessor = httpContextAccessor;
             _postHandler = postHandler;
         }
+
+
+        //public PostsController(IPostHandler postHandler, )
+        //{
+        //    _postHandler = postHandler;
+        //}
 
         // GET: api/<UsersController>
         [AllowAnonymous]
@@ -45,28 +55,32 @@ namespace Blog.API.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(UserModel), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody] PostModel model)
+        public async Task<IActionResult> Post([FromBody] PostInsertModel model)
         {
-            var newUser = await _postHandler.Add(model);
-            return CreatedAtAction("Get", new { id = newUser.Id }, newUser);
+            string userName = User.Identity.Name;
+            var newUser = await _postHandler.Add(model, userName);
+            return CreatedAtAction("Get", newUser);
         }
 
         // PUT api/<UsersController>/5
-        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(UserModel), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> PutAsync(int id, [FromBody] PostModel model)
+        public async Task<ActionResult> PutAsync(int id, [FromBody] PostInsertModel model)
         {
-            if (id != model.Id) return BadRequest();
+            if(!_postHandler.Exists(id))
+                return BadRequest("Post doesn't exist.");
 
-            await _postHandler.Edit(model);
+            var result = await _postHandler.Edit(id, model, User.Identity.Name);
 
-            return NoContent();
+            if (result != null)
+                return NoContent();
+            else
+                return Forbid();
         }
 
         // DELETE api/<UsersController>/5
-        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(UserModel), StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -75,9 +89,12 @@ namespace Blog.API.Controllers
             if (!_postHandler.Exists(id))
                 return NotFound();
 
-            await _postHandler.Delete(id);
+            var statusCode = await _postHandler.Delete(id, User.Identity.Name);
 
-            return NoContent();
+            if (statusCode == StatusCodes.Status204NoContent)
+                return NoContent();
+            else
+                return Forbid();
         }
     }
 }

@@ -17,6 +17,7 @@ namespace Core
             CreateMap<Post, PostModel>();
             CreateMap<Comment, CommentModel>();
             CreateMap<UserModel, User>();
+            CreateMap<PostInsertModel, Post>();
             CreateMap<PostModel, Post>();
             CreateMap<CommentModel, Comment>();
         }
