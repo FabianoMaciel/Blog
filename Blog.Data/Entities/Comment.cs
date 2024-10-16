@@ -1,4 +1,6 @@
-﻿namespace Blog.Data.Entities
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace Blog.Data.Entities
 {
     public class Comment
     {

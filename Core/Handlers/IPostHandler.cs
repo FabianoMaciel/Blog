@@ -4,7 +4,7 @@ namespace Core.Handlers
 {
     public interface IPostHandler
     {
-        Task<IEnumerable<PostModel>> GetAll();
+        Task<IEnumerable<PostModel>> GetAll(bool isFromApi = false);
         Task<PostModel> Add(PostModel model);
         Task<PostModel> Get(int id);
         Task<PostModel> Edit(PostModel model);

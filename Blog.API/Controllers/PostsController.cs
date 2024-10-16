@@ -1,12 +1,13 @@
 ﻿using Blog.Core.Models;
 using Core.Handlers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Blog.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PostsController : ControllerBase
@@ -18,14 +19,16 @@ namespace Blog.API.Controllers
         }
 
         // GET: api/<UsersController>
+        [AllowAnonymous]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<PostModel>), StatusCodes.Status200OK)]
         public async Task<IEnumerable<PostModel>> GetAsync()
         {
-            return await _postHandler.GetAll();
+            return await _postHandler.GetAll(true);
         }
 
         // GET api/<UsersController>/5
+        [AllowAnonymous]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(UserModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -62,6 +65,7 @@ namespace Blog.API.Controllers
         }
 
         // DELETE api/<UsersController>/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(UserModel), StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

@@ -29,10 +29,10 @@ namespace Blog.API.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(UserModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetAsync(int id)
+        public async Task<IActionResult> GetAsync(string id)
         {
             var user = await _userHandler.Get(id);
-            if (user == null || user.Id == 0)
+            if (string.IsNullOrWhiteSpace(id))
                 return NotFound();
             else
                 return Ok(user);
@@ -54,7 +54,7 @@ namespace Blog.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> PutAsync(int id, [FromBody] UserModel model)
         {
-            if (id != model.Id) return BadRequest();
+            if (!id.Equals(model.Id)) return BadRequest();
 
              await _userHandler.Edit(model);
 

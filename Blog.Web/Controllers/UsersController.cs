@@ -23,14 +23,14 @@ namespace Blog.Web.Controllers
         }
 
         // GET: Users/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var user = await _userHandler.Get(id.Value);
+            var user = await _userHandler.Get(id);
             if (user == null)
             {
                 return NotFound();
@@ -62,14 +62,14 @@ namespace Blog.Web.Controllers
         }
 
         // GET: Users/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var user = await _userHandler.Get(id.Value);
+            var user = await _userHandler.Get(id);
 
             if (user == null)
             {
@@ -86,7 +86,7 @@ namespace Blog.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Occupation,IsAdmin,DateOfBirth,CreatedAt")] UserModel model)
         {
-            if (id != model.Id)
+            if (!id.Equals(model.Id))
             {
                 return NotFound();
             }
@@ -114,14 +114,14 @@ namespace Blog.Web.Controllers
         }
 
         // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var user = await _userHandler.Get(id.Value);
+            var user = await _userHandler.Get(id);
             if (user == null)
             {
                 return NotFound();

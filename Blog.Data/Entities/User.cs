@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace Blog.Data.Entities
 {
@@ -11,6 +7,9 @@ namespace Blog.Data.Entities
         public int Id { get; set; }
 
         public string Name { get; set; }
+        public IdentityUser IdentityUser { get; set; }
+
+        public string IdentityUserId { get; set; }
 
         public string Occupation { get; set; }
 

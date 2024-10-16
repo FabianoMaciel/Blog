@@ -1,4 +1,4 @@
-﻿-Adicionar comentarios MVC
+﻿-Adicionar seguranca e autorizacao
+-Usuario login e etc
 -Adicionar comentarios na API
 
---Adicionar seguranca e autorizacao

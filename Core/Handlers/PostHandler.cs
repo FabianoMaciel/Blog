@@ -16,9 +16,14 @@ namespace Core.Handlers
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<PostModel>> GetAll()
+        public async Task<IEnumerable<PostModel>> GetAll(bool isFromApi)
         {
-            var entities = await _context.Posts.Include(p => p.Autor).Include(a => a.Comments).ToListAsync();
+            List<Post> entities;
+            if (!isFromApi)
+                entities = await _context.Posts.Include(p => p.Autor).Include(p => p.Comments).ToListAsync();
+            else
+                entities = await _context.Posts.Include(p => p.Autor).ToListAsync();
+
             var models = entities.Select(a => _mapper.Map<PostModel>(a));
 
             return models;

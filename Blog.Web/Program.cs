@@ -2,6 +2,7 @@ using AutoMapper;
 using Blog.Data;
 using Core;
 using Core.Handlers;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,11 @@ var mapperConfig = new MapperConfiguration(mc =>
 IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddDbContext<AppDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>();
+
 builder.Services.AddScoped<ICommentHandler, CommentHandler>();
 builder.Services.AddScoped<IUserHandler, UserHandler>();
 builder.Services.AddScoped<IPostHandler, PostHandler>();
@@ -36,6 +42,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
