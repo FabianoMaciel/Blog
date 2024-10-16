@@ -3,7 +3,8 @@
 
 2-limitar acessor por roles MVC/UI 
 
-3-Adicionar comentarios na API 
+3-Validacoes por usuario para exclusao e edicao de post ja foram feitas, falta apenas passar isso pro MVC com usuario logado
+
 
 # **Blog Módulo 1 - Aplicação de Blog Simples com MVC e API RESTful**
 
