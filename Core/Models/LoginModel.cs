@@ -10,10 +10,8 @@ namespace Core.Models
 {
     public class LoginModel
     {
-        [Required(ErrorMessage = "The Email is Required")]
-        [EmailAddress]
-        [DisplayName("E-mail")]
-        public string Email { get; set; }
+        [Required(ErrorMessage = "The username is Required")]
+        public string Username { get; set; }
 
         [Required(ErrorMessage = "The Password is Required")]
         [MinLength(5)]

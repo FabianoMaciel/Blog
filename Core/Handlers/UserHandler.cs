@@ -32,7 +32,6 @@ namespace Core.Handlers
             _jwtSettings = jwtSettings.Value;
         }
 
-
         public async Task<IEnumerable<UserModel>> GetAll()
         {
             var entities = await _context.Users.ToListAsync();
@@ -86,7 +85,6 @@ namespace Core.Handlers
                 EmailConfirmed = true
             };
 
-
             var result = await _userManager.CreateAsync(user, registerUser.Password);
             if (registerUser.IsAdmin)
             {
@@ -110,11 +108,11 @@ namespace Core.Handlers
 
         public async Task<string> Login(LoginModel login)
         {
-            var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, false, true);
+            var result = await _signInManager.PasswordSignInAsync(login.Username, login.Password, false, true);
 
             if (result.Succeeded)
             {
-                return await GenerateJWT(login.Email);
+                return await GenerateJWT(login.Username);
             }
 
             return string.Empty;

@@ -52,6 +52,7 @@ namespace Blog.API.Controllers
         }
 
         // PUT api/<UsersController>/5
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(UserModel), StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

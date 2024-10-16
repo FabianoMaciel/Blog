@@ -9,7 +9,7 @@ namespace Blog.Data
 {
     public class AppDbContext : IdentityDbContext
     {
-       
+        
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -19,8 +19,7 @@ namespace Blog.Data
             modelBuilder.ApplyConfiguration(new PostConfiguration());
             modelBuilder.ApplyConfiguration(new CommentConfiguration());
 
-            const string ADMIN_ID = "a18be9c0-aa65-4af8-bd17-00bd9344e575";
-            var hasher = new PasswordHasher<IdentityUser>();
+            
             modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole
             {
                 Id = "1",
@@ -30,14 +29,17 @@ namespace Blog.Data
 
             var identityUser = new IdentityUser
             {
-                UserName = "Admin",
+                UserName = "admin@blog.com",
                 Email = "admin@blog.com",
-                NormalizedEmail = "admin@blog.com",
-                EmailConfirmed = true,
-                PasswordHash = hasher.HashPassword(null, "Admin123#") ,
+                NormalizedEmail = "ADMIN@BLOG.COM",
+                NormalizedUserName = "ADMIN@BLOG.COM",
+                LockoutEnabled = true,
+                EmailConfirmed = true
             };
-            modelBuilder.Entity<IdentityUser>().HasData(identityUser);
 
+            var hasher = new PasswordHasher<IdentityUser>();
+            identityUser.PasswordHash = hasher.HashPassword(identityUser, "Admin123#");
+            modelBuilder.Entity<IdentityUser>().HasData(identityUser);
 
             modelBuilder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
             {

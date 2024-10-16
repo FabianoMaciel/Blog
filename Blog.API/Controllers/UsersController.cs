@@ -1,5 +1,7 @@
 ﻿using Blog.Core.Models;
 using Core.Handlers;
+using Core.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
@@ -17,7 +19,33 @@ namespace Blog.API.Controllers
             _userHandler = userHandler;
         }
 
+        [Authorize(Roles = "admin")]
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(UserModel registerUser)
+        {
+            if (!ModelState.IsValid) return ValidationProblem(ModelState);
+
+            string token = await _userHandler.Register(registerUser);
+            if (!string.IsNullOrWhiteSpace(token))
+                return Ok(token);
+
+            return Problem("Error registering the user.");
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([Bind("Email, Password")] LoginModel login)
+        {
+            if (!ModelState.IsValid) { return ValidationProblem(ModelState); }
+
+            string token = await _userHandler.Login(login);
+            if (!string.IsNullOrWhiteSpace(token))
+                return Ok(token);
+
+            return Problem($"User or password incorrect.");
+        }
+
         // GET: api/<UsersController>
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<UserModel>), StatusCodes.Status200OK)]
         public async Task<IEnumerable<UserModel>> GetAsync()
@@ -26,6 +54,7 @@ namespace Blog.API.Controllers
         }
 
         // GET api/<UsersController>/5
+        [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(UserModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -38,17 +67,9 @@ namespace Blog.API.Controllers
                 return Ok(user);
         }
 
-        // POST api/<UsersController>
-        [HttpPost]
-        [ProducesResponseType(typeof(UserModel), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody] UserModel model)
-        {
-            var newUser = await _userHandler.Add(model);
-            return CreatedAtAction("Get", new { id = newUser.Id }, newUser);
-        }
 
         // PUT api/<UsersController>/5
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(UserModel), StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -61,6 +82,7 @@ namespace Blog.API.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(UserModel), StatusCodes.Status204NoContent)]

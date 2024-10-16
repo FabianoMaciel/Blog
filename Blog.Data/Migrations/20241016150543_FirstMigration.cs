@@ -231,17 +231,17 @@ namespace Blog.Data.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "5ac0e7a9-d527-4b95-a4d6-9377cd81475a", 0, "f63eab04-518c-4cb7-988c-f8f56b7c4c47", "admin@blog.com", true, false, null, "admin@blog.com", null, "AQAAAAIAAYagAAAAEFe2UtyR9y1vwsgYnyIVG0/dvax7VoqAh0LxH4XBdjxAdItN+Z2WIsHMu5xOu598lw==", null, false, "c54c6aad-0fff-41e5-a99c-076f03d36b61", false, "Admin" });
+                values: new object[] { "89ee3dcd-d02d-4aba-a326-9fc72151b6d4", 0, "35e6b909-1544-4ac3-81ee-085e5164e566", "admin@blog.com", true, true, null, "ADMIN@BLOG.COM", "ADMIN@BLOG.COM", "AQAAAAIAAYagAAAAEIS9EdUndXGFh98zvMd//o2J8a6e8IIMIqAXgjjwXb7C5a8tHopScWzdNcsWz1WyEA==", null, false, "da1f0e7b-c661-4cae-a9f6-cc071cc0a005", false, "admin@blog.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "1", "5ac0e7a9-d527-4b95-a4d6-9377cd81475a" });
+                values: new object[] { "1", "89ee3dcd-d02d-4aba-a326-9fc72151b6d4" });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "CreatedAt", "DateOfBirth", "IdentityUserId", "IsAdmin", "Name", "Occupation" },
-                values: new object[] { 1, new DateTime(2024, 10, 16, 11, 20, 23, 600, DateTimeKind.Local).AddTicks(4894), new DateTime(2024, 10, 16, 11, 20, 23, 600, DateTimeKind.Local).AddTicks(4955), "5ac0e7a9-d527-4b95-a4d6-9377cd81475a", true, "Administrator", "System Admin" });
+                values: new object[] { 1, new DateTime(2024, 10, 16, 16, 5, 43, 294, DateTimeKind.Local).AddTicks(9532), new DateTime(2024, 10, 16, 16, 5, 43, 294, DateTimeKind.Local).AddTicks(9586), "89ee3dcd-d02d-4aba-a326-9fc72151b6d4", true, "Administrator", "System Admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

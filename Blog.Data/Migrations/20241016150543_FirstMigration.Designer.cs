@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blog.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241016102024_FirstMigration")]
+    [Migration("20241016150543_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -121,9 +121,9 @@ namespace Blog.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 10, 16, 11, 20, 23, 600, DateTimeKind.Local).AddTicks(4894),
-                            DateOfBirth = new DateTime(2024, 10, 16, 11, 20, 23, 600, DateTimeKind.Local).AddTicks(4955),
-                            IdentityUserId = "5ac0e7a9-d527-4b95-a4d6-9377cd81475a",
+                            CreatedAt = new DateTime(2024, 10, 16, 16, 5, 43, 294, DateTimeKind.Local).AddTicks(9532),
+                            DateOfBirth = new DateTime(2024, 10, 16, 16, 5, 43, 294, DateTimeKind.Local).AddTicks(9586),
+                            IdentityUserId = "89ee3dcd-d02d-4aba-a326-9fc72151b6d4",
                             IsAdmin = true,
                             Name = "Administrator",
                             Occupation = "System Admin"
@@ -257,18 +257,19 @@ namespace Blog.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5ac0e7a9-d527-4b95-a4d6-9377cd81475a",
+                            Id = "89ee3dcd-d02d-4aba-a326-9fc72151b6d4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f63eab04-518c-4cb7-988c-f8f56b7c4c47",
+                            ConcurrencyStamp = "35e6b909-1544-4ac3-81ee-085e5164e566",
                             Email = "admin@blog.com",
                             EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "admin@blog.com",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFe2UtyR9y1vwsgYnyIVG0/dvax7VoqAh0LxH4XBdjxAdItN+Z2WIsHMu5xOu598lw==",
+                            LockoutEnabled = true,
+                            NormalizedEmail = "ADMIN@BLOG.COM",
+                            NormalizedUserName = "ADMIN@BLOG.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIS9EdUndXGFh98zvMd//o2J8a6e8IIMIqAXgjjwXb7C5a8tHopScWzdNcsWz1WyEA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c54c6aad-0fff-41e5-a99c-076f03d36b61",
+                            SecurityStamp = "da1f0e7b-c661-4cae-a9f6-cc071cc0a005",
                             TwoFactorEnabled = false,
-                            UserName = "Admin"
+                            UserName = "admin@blog.com"
                         });
                 });
 
@@ -336,7 +337,7 @@ namespace Blog.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "5ac0e7a9-d527-4b95-a4d6-9377cd81475a",
+                            UserId = "89ee3dcd-d02d-4aba-a326-9fc72151b6d4",
                             RoleId = "1"
                         });
                 });
