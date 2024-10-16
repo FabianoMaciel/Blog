@@ -1,6 +1,8 @@
 # *** NOTE PARA EDUARD - TO DO:
-1-Usuario login no MVC/UI 
+1-Usuario login no MVC/UI
+
 2-limitar acessor por roles MVC/UI 
+
 3-Adicionar comentarios na API 
 
 # **Blog Módulo 1 - Aplicação de Blog Simples com MVC e API RESTful**
