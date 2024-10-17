@@ -5,6 +5,8 @@
 
 3-Validacoes por usuario para exclusao e edicao de post ja foram feitas, falta apenas passar isso pro MVC com usuario logado
 
+4- Adicionar a controller de comentarios dentro da API
+
 
 # **Blog Módulo 1 - Aplicação de Blog Simples com MVC e API RESTful**
 
