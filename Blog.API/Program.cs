@@ -1,5 +1,5 @@
 using AutoMapper;
-using Blog.Data;
+using Core.Seed;
 using Core;
 using Core.Handlers;
 using Core.Models;
@@ -101,5 +101,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseDbMigrationHelper();
 
 app.Run();

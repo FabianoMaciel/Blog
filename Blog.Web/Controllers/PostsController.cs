@@ -1,12 +1,10 @@
 ﻿using Blog.Core.Models;
-using Blog.Data;
-using Blog.Data.Entities;
-using Blog.Web.Models;
 using Core.Handlers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
+//TO DO FIX THE POST INTO web
 namespace Blog.Web.Controllers
 {
     public class PostsController : Controller
@@ -55,14 +53,14 @@ namespace Blog.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Content,CreatedAt,AutorId")] PostModel model)
+        public async Task<IActionResult> Create([Bind("Id,Title,Content,CreatedAt,AutorId")] PostInsertModel model)
         {
             if (ModelState.IsValid)
             {
-                await _postHandler.Add(model);
+                await _postHandler.Add(model, string.Empty);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AutorId"] = new SelectList(await _userHandler.GetAll(), "Id", "Name", model.AutorId);
+            //ViewData["AutorId"] = new SelectList(await _userHandler.GetAll(), "Id", "Name", model.AutorId);
             return View(model);
         }
 
@@ -80,7 +78,7 @@ namespace Blog.Web.Controllers
             {
                 return NotFound();
             }
-            ViewData["AutorId"] = new SelectList(await _userHandler.GetAll(), "Id", "Name", post.AutorId);
+            ViewData["AutorId"] = new SelectList(await _userHandler.GetAll(), "Id", "Name", post.AuthorId);
             return View(post);
         }
 
@@ -89,9 +87,9 @@ namespace Blog.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Content,CreatedAt,AutorId")] PostModel post)
+        public async Task<IActionResult> Edit(int id, [Bind("Title,Content")] PostInsertModel post)
         {
-            if (id != post.Id)
+            if (id < 0)
             {
                 return NotFound();
             }
@@ -100,11 +98,11 @@ namespace Blog.Web.Controllers
             {
                 try
                 {
-                    await _postHandler.Edit(post);
+                    await _postHandler.Edit(id, post, string.Empty);//to do fabiano passar logged user
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_postHandler.Exists(post.Id))
+                    if (!_postHandler.Exists(id))
                     {
                         return NotFound();
                     }
@@ -115,7 +113,7 @@ namespace Blog.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AutorId"] = new SelectList(await _userHandler.GetAll(), "Id", "Name", post.AutorId);
+            //ViewData["AutorId"] = new SelectList(await _userHandler.GetAll(), "Id", "Name", post.AutorId);
             return View(post);
         }
 
@@ -141,7 +139,7 @@ namespace Blog.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _postHandler.Delete(id);
+            await _postHandler.Delete(id, string.Empty);// to do Fabiano logged user
             return RedirectToAction(nameof(Index));
         }
     }

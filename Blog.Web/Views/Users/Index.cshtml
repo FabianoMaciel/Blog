@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Blog.Core.Models.UserModel>
+﻿@model IEnumerable<Blog.Core.Models.AuthorModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,17 +13,11 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.User.UserName)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Occupation)
-            </th>
-            <th>
+        @*     <th>
                 @Html.DisplayNameFor(model => model.IsAdmin)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateOfBirth)
-            </th>
+            </th> *@
             <th></th>
         </tr>
     </thead>
@@ -32,17 +26,11 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
+                    @Html.DisplayFor(modelItem => item.User.UserName)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Occupation)
-                </td>
-                <td>
+               @*  <td>
                     @Html.DisplayFor(modelItem => item.IsAdmin)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DateOfBirth)
-                </td>
+                </td> *@
                 <td>
                     @if (item.Id > 1)
                     {

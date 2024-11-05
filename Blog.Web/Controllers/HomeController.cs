@@ -1,8 +1,6 @@
-using Blog.Data;
 using Blog.Web.Models;
 using Core.Handlers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace Blog.Web.Controllers

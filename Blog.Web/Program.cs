@@ -1,9 +1,9 @@
 using AutoMapper;
-using Blog.Data;
 using Core;
 using Core.Handlers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Core.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,5 +48,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.UseDbMigrationHelper();
 
 app.Run();

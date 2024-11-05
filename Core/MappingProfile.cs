@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
 using Blog.Core.Models;
-using Blog.Data.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Core.Entities;
 
 namespace Core
 {
@@ -13,10 +8,10 @@ namespace Core
     {
         public MappingProfile()
         {
-            CreateMap<User, UserModel>();
+            CreateMap<Author, AuthorModel>();
             CreateMap<Post, PostModel>();
             CreateMap<Comment, CommentModel>();
-            CreateMap<UserModel, User>();
+            CreateMap<AuthorModel, Author>();
             CreateMap<PostInsertModel, Post>();
             CreateMap<PostModel, Post>();
             CreateMap<CommentModel, Comment>();

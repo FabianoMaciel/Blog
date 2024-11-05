@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using Blog.Core.Models;
-using Blog.Data;
-using Blog.Data.Entities;
+using Core.Entities;
 using Core.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -31,22 +29,22 @@ namespace Core.Handlers
             _jwtSettings = jwtSettings.Value;
         }
 
-        public async Task<IEnumerable<UserModel>> GetAll()
+        public async Task<IEnumerable<AuthorModel>> GetAll()
         {
-            var entities = await _context.Users.ToListAsync();
-            var models = entities.Select(a => _mapper.Map<UserModel>(a));
+            var entities = await _context.Authors.ToListAsync();
+            var models = entities.Select(a => _mapper.Map<AuthorModel>(a));
 
             return models;
         }
 
-        public async Task<UserModel> Get(string id)
+        public async Task<AuthorModel> Get(string id)
         {
-            return _mapper.Map<UserModel>(await _context.Users.FindAsync(id));
+            return _mapper.Map<AuthorModel>(await _context.Users.FindAsync(id));
         }
 
-        public async Task<UserModel> Edit(UserModel model)
+        public async Task<AuthorModel> Edit(AuthorModel model)
         {
-            var entity = _mapper.Map<User>(model);
+            var entity = _mapper.Map<Author>(model);
             _context.Update(entity);
             await _context.SaveChangesAsync();
 
@@ -55,7 +53,7 @@ namespace Core.Handlers
 
         public bool Exists(int id)
         {
-            return _context.Users.Any(e => e.IdentityUser.Id.Equals(id));
+            return _context.Users.Any(e => e.Id.Equals(id));
         }
 
         public async Task Delete(int id)
@@ -65,9 +63,9 @@ namespace Core.Handlers
             await _context.SaveChangesAsync();
         }
 
-        public async Task<UserModel> Add(UserModel model)
+        public async Task<AuthorModel> Add(AuthorModel model)
         {
-            var entity = _mapper.Map<User>(model);
+            var entity = _mapper.Map<Author>(model);
             entity.CreatedAt = DateTime.Now;
             _context.Add(entity);
             await _context.SaveChangesAsync();
@@ -75,7 +73,7 @@ namespace Core.Handlers
             return model;
         }
 
-        public async Task<string> Register(UserModel registerUser)
+        public async Task<string> Register(UserInsertModel registerUser)
         {
             var user = new IdentityUser
             {
@@ -90,10 +88,10 @@ namespace Core.Handlers
                 await _userManager.AddToRoleAsync(user, "ADMIN");
             }
 
-            var entity = _mapper.Map<User>(registerUser);
-            entity.IdentityUser = user;
+            var entity = _mapper.Map<Author>(registerUser);
+            entity.User = user;
             entity.CreatedAt = DateTime.Now;
-            _context.Add(entity);
+            _context.Authors.Add(entity);
             await _context.SaveChangesAsync();
 
             if (result.Succeeded)

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Blog.Core.Models;
-using Blog.Data;
-using Blog.Data.Entities;
+using Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Core.Handlers
@@ -18,7 +17,7 @@ namespace Core.Handlers
 
         public async Task<IEnumerable<CommentModel>> GetAll()
         {
-            var entities = await _context.Comments.Include(c => c.Post).Include(c => c.User).ToListAsync();
+            var entities = await _context.Comments.Include(c => c.Post).Include(c => c.Author).ToListAsync();
             var models = entities.Select(a => _mapper.Map<CommentModel>(a));
 
             return models;
@@ -26,6 +25,7 @@ namespace Core.Handlers
 
         public async Task<CommentModel> Add(CommentModel model)
         {
+            model.AuthorId = 1;
             var entity = _mapper.Map<Comment>(model);
             entity.CreatedAt = DateTime.Now;
             _context.Add(entity);
@@ -40,7 +40,7 @@ namespace Core.Handlers
         {
             var entity = await _context.Comments
                 .Include(c => c.Post)
-                .Include(c => c.User)
+                .Include(c => c.Author)
                 .FirstOrDefaultAsync(m => m.Id == id);
             return _mapper.Map<CommentModel>(entity);
         }

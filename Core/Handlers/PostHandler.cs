@@ -1,15 +1,12 @@
 ﻿using AutoMapper;
 using Blog.Core.Models;
-using Blog.Data;
-using Blog.Data.Entities;
+using Core.Entities;
 using Core.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System.Net;
-using System.Security.Claims;
 
 namespace Core.Handlers
 {
@@ -34,9 +31,9 @@ namespace Core.Handlers
         {
             List<Post> entities;
             if (!isFromApi)
-                entities = await _context.Posts.Include(p => p.Autor).Include(p => p.Comments).ToListAsync();
+                entities = await _context.Posts.Include(p => p.Author).Include(p => p.Comments).ToListAsync();
             else
-                entities = await _context.Posts.Include(p => p.Autor).ToListAsync();
+                entities = await _context.Posts.Include(p => p.Author).ToListAsync();
 
             var models = entities.Select(a => _mapper.Map<PostModel>(a));
 
@@ -45,12 +42,13 @@ namespace Core.Handlers
 
         public async Task<PostInsertModel> Add(PostInsertModel model, string loggedUser)
         {
-            var identityUser = await _userManager.FindByEmailAsync(loggedUser);
-            var user = await _context.Users.FirstOrDefaultAsync(a => a.IdentityUserId == identityUser.Id);
+            //to do fabiano login
+            //var identityUser = await _userManager.FindByEmailAsync(loggedUser);
+            //var author = await _context.Authors.FirstOrDefaultAsync(a => a.UserId == identityUser.Id);
 
             var entity = _mapper.Map<Post>(model);
             entity.CreatedAt = DateTime.Now;
-            entity.AutorId = user.Id;
+            entity.AuthorId = "1"; //UNDERSTAND WHAT IS HAPPENING HERE TO DO FABIANO
 
             _context.Add(entity);
             await _context.SaveChangesAsync();
@@ -61,7 +59,7 @@ namespace Core.Handlers
         public async Task<PostModel> Get(int id)
         {
             var entity = await _context.Posts
-                .Include(p => p.Autor)
+                .Include(p => p.Author)
                 .FirstOrDefaultAsync(m => m.Id == id);
             return _mapper.Map<PostModel>(entity);
         }
@@ -110,8 +108,8 @@ namespace Core.Handlers
         {
             var identityUser = await _userManager.FindByEmailAsync(loggedUser);
             var roles = await _userManager.GetRolesAsync(identityUser);
-            var user = await _context.Users.FirstOrDefaultAsync(a => a.IdentityUserId == identityUser.Id);
-            bool allowed = _signInManager.Context.User.IsInRole("admin") || entity.AutorId == user.Id;
+            var user = await _context.Authors.FirstOrDefaultAsync(a => a.UserId == identityUser.Id);
+            bool allowed = _signInManager.Context.User.IsInRole("admin") || entity.AuthorId.Equals(user.UserId);
 
             return allowed;
         }

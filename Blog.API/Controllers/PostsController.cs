@@ -22,12 +22,6 @@ namespace Blog.API.Controllers
             _postHandler = postHandler;
         }
 
-
-        //public PostsController(IPostHandler postHandler, )
-        //{
-        //    _postHandler = postHandler;
-        //}
-
         // GET: api/<UsersController>
         [AllowAnonymous]
         [HttpGet]
@@ -40,7 +34,7 @@ namespace Blog.API.Controllers
         // GET api/<UsersController>/5
         [AllowAnonymous]
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(UserModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(AuthorModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAsync(int id)
         {
@@ -53,8 +47,9 @@ namespace Blog.API.Controllers
 
         // POST api/<UsersController>
         [HttpPost]
-        [ProducesResponseType(typeof(UserModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(AuthorModel), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Post([FromBody] PostInsertModel model)
         {
             string userName = User.Identity.Name;
@@ -64,9 +59,10 @@ namespace Blog.API.Controllers
 
         // PUT api/<UsersController>/5
         [HttpPut("{id}")]
-        [ProducesResponseType(typeof(UserModel), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(AuthorModel), StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> PutAsync(int id, [FromBody] PostInsertModel model)
         {
             if(!_postHandler.Exists(id))
@@ -82,8 +78,9 @@ namespace Blog.API.Controllers
 
         // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
-        [ProducesResponseType(typeof(UserModel), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(AuthorModel), StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> Delete(int id)
         {
             if (!_postHandler.Exists(id))

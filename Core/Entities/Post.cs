@@ -1,9 +1,8 @@
-﻿using Core.Entities;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
-namespace Blog.Core.Models
+namespace Core.Entities
 {
-    public class PostModel
+    public class Post
     {
         public int Id { get; set; }
 
@@ -15,7 +14,7 @@ namespace Blog.Core.Models
 
         public IdentityUser Author { get; set; }
 
-        public int AuthorId { get; set; }
+        public string AuthorId { get; set; }
 
         public List<Comment> Comments { get; set; }
     }
