@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using Blog.Core.Models;
-using Blog.Data;
-using Blog.Data.Entities;
+using Core.Entities;
 using Core.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -21,53 +20,47 @@ namespace Core.Handlers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly JwtSettings _jwtSettings;
+        private readonly IHttpContextAccessor _accessor;
 
-        public UserHandler(AppDbContext context, IMapper mapper, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IOptions<JwtSettings> jwtSettings)
+        public UserHandler(AppDbContext context, IMapper mapper, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IOptions<JwtSettings> jwtSettings, IHttpContextAccessor accessor)
         {
             _context = context;
             _mapper = mapper;
             _signInManager = signInManager;
             _userManager = userManager;
             _jwtSettings = jwtSettings.Value;
+            _accessor = accessor;
         }
 
-        public async Task<IEnumerable<UserModel>> GetAll()
+        public async Task<IEnumerable<AuthorModel>> GetAll()
         {
-            var entities = await _context.Users.ToListAsync();
-            var models = entities.Select(a => _mapper.Map<UserModel>(a));
+            var entities = await _context.Authors.Include(a => a.User).ToListAsync();
+            var models = entities.Select(a => _mapper.Map<AuthorModel>(a));
 
             return models;
         }
 
-        public async Task<UserModel> Get(string id)
+        public async Task<AuthorModel> Get(int id)
         {
-            return _mapper.Map<UserModel>(await _context.Users.FindAsync(id));
-        }
-
-        public async Task<UserModel> Edit(UserModel model)
-        {
-            var entity = _mapper.Map<User>(model);
-            _context.Update(entity);
-            await _context.SaveChangesAsync();
-
-            return model;
+            return _mapper.Map<AuthorModel>(await _context.Authors.Include(a => a.User).FirstOrDefaultAsync(a => a.Id == id));
         }
 
         public bool Exists(int id)
         {
-            return _context.Users.Any(e => e.IdentityUser.Id.Equals(id));
+            return _context.Authors.Any(e => e.Id == id);
         }
 
         public async Task Delete(int id)
         {
-            var entity = await _context.Users.FindAsync(id);
-            _context.Users.Remove(entity);
+            var entity = await _context.Authors.Include(a => a.User).FirstOrDefaultAsync(a => a.Id == id);
+            _context.Users.Remove(entity.User);
+            _context.Authors.Remove(entity);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<UserModel> Add(UserModel model)
+        public async Task<AuthorModel> Add(AuthorModel model)
         {
-            var entity = _mapper.Map<User>(model);
+            var entity = _mapper.Map<Author>(model);
             entity.CreatedAt = DateTime.Now;
             _context.Add(entity);
             await _context.SaveChangesAsync();
@@ -75,7 +68,7 @@ namespace Core.Handlers
             return model;
         }
 
-        public async Task<string> Register(UserModel registerUser)
+        public async Task<string> Register(UserInsertModel registerUser)
         {
             var user = new IdentityUser
             {
@@ -90,10 +83,10 @@ namespace Core.Handlers
                 await _userManager.AddToRoleAsync(user, "ADMIN");
             }
 
-            var entity = _mapper.Map<User>(registerUser);
-            entity.IdentityUser = user;
+            var entity = new Author();
+            entity.User = user;
             entity.CreatedAt = DateTime.Now;
-            _context.Add(entity);
+            _context.Authors.Add(entity);
             await _context.SaveChangesAsync();
 
             if (result.Succeeded)
@@ -148,5 +141,34 @@ namespace Core.Handlers
 
             return encodedToken;
         }
+
+        public bool IsAdmin()
+        {
+            return _accessor.HttpContext?.User.IsInRole("admin") ?? false;
+        }
+
+        public async Task<bool> IsAllowedAsync(string authorId)
+        {
+            if (string.IsNullOrEmpty(authorId)) return false;
+            string loggerUser = await GetUserIdAsync();
+            return authorId.Equals(loggerUser) || IsAdmin();
+        }
+
+        public async Task<string> GetUserIdAsync()
+        {
+            if (!IsAuthenticated()) return string.Empty;
+
+            //TO DO why this is returning null from the nameidentifier from the api
+            var userName = _accessor.HttpContext?.User.FindFirst(ClaimTypes.Name)?.Value;
+            var user = await _context.Users.FirstOrDefaultAsync(a => a.UserName.Equals(userName));
+
+            return user.Id ?? string.Empty;
+        }
+
+        public bool IsAuthenticated()
+        {
+            return _accessor.HttpContext?.User.Identity is { IsAuthenticated: true };
+        }
+
     }
 }

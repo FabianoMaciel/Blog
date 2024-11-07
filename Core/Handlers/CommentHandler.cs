@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Blog.Core.Models;
-using Blog.Data;
-using Blog.Data.Entities;
+using Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Core.Handlers
@@ -10,15 +9,17 @@ namespace Core.Handlers
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
-        public CommentHandler(AppDbContext context, IMapper mapper)
+        private readonly IUserHandler _userHandler;
+        public CommentHandler(AppDbContext context, IMapper mapper, IUserHandler userHandler)
         {
             _context = context;
             _mapper = mapper;
+            _userHandler = userHandler;
         }
 
         public async Task<IEnumerable<CommentModel>> GetAll()
         {
-            var entities = await _context.Comments.Include(c => c.Post).Include(c => c.User).ToListAsync();
+            var entities = await _context.Comments.Include(c => c.Post).Include(c => c.Author).ToListAsync();
             var models = entities.Select(a => _mapper.Map<CommentModel>(a));
 
             return models;
@@ -26,6 +27,7 @@ namespace Core.Handlers
 
         public async Task<CommentModel> Add(CommentModel model)
         {
+            model.AuthorId = await _userHandler.GetUserIdAsync();
             var entity = _mapper.Map<Comment>(model);
             entity.CreatedAt = DateTime.Now;
             _context.Add(entity);
@@ -36,11 +38,23 @@ namespace Core.Handlers
             return model;
         }
 
+        public async Task<CommentInsertModel> Add(CommentInsertModel model, string userId)
+        {
+            var entity = _mapper.Map<Comment>(model);
+            entity.AuthorId = userId;
+            entity.CreatedAt = DateTime.Now;
+            _context.Add(entity);
+
+            await _context.SaveChangesAsync();
+
+            return model;
+        }
+
         public async Task<CommentModel> Get(int id)
         {
             var entity = await _context.Comments
                 .Include(c => c.Post)
-                .Include(c => c.User)
+                .Include(c => c.Author)
                 .FirstOrDefaultAsync(m => m.Id == id);
             return _mapper.Map<CommentModel>(entity);
         }
@@ -59,11 +73,24 @@ namespace Core.Handlers
             return _context.Comments.Any(e => e.Id == id);
         }
 
-        public async Task Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             var entity = await _context.Comments.FindAsync(id);
-            _context.Comments.Remove(entity);
-            await _context.SaveChangesAsync();
+            if (await _userHandler.IsAllowedAsync(entity.AuthorId))
+            {
+                _context.Comments.Remove(entity);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<List<CommentModel>> GetCommentsByPost(int postId)
+        {
+            var post = await _context.Posts.Include(a => a.Comments).FirstOrDefaultAsync(a => a.Id == postId);
+
+            return post.Comments.Select(a => _mapper.Map<CommentModel>(a)).ToList();
         }
     }
 }

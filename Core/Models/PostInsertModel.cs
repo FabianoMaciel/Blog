@@ -1,7 +1,4 @@
-﻿using Blog.Data.Entities;
-using System;
-
-namespace Blog.Core.Models
+﻿namespace Blog.Core.Models
 {
     public class PostInsertModel
     {

@@ -13,20 +13,14 @@ namespace Blog.API.Controllers
     [ApiController]
     public class PostsController : ControllerBase
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserHandler _userHandler;
         private readonly IPostHandler _postHandler;
 
-        public PostsController(IHttpContextAccessor httpContextAccessor, IPostHandler postHandler)
+        public PostsController(IPostHandler postHandler, IUserHandler userHandler)
         {
-            _httpContextAccessor = httpContextAccessor;
+            _userHandler = userHandler;
             _postHandler = postHandler;
         }
-
-
-        //public PostsController(IPostHandler postHandler, )
-        //{
-        //    _postHandler = postHandler;
-        //}
 
         // GET: api/<UsersController>
         [AllowAnonymous]
@@ -40,39 +34,41 @@ namespace Blog.API.Controllers
         // GET api/<UsersController>/5
         [AllowAnonymous]
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(UserModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(AuthorModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAsync(int id)
         {
-            var user = await _postHandler.Get(id);
-            if (user == null || user.Id == 0)
+            var post = await _postHandler.Get(id);
+            if (post == null || post.Id == 0)
                 return NotFound();
             else
-                return Ok(user);
+                return Ok(post);
         }
 
         // POST api/<UsersController>
         [HttpPost]
-        [ProducesResponseType(typeof(UserModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(AuthorModel), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Post([FromBody] PostInsertModel model)
         {
-            string userName = User.Identity.Name;
-            var newUser = await _postHandler.Add(model, userName);
-            return CreatedAtAction("Get", newUser);
+            string authorId = await _userHandler.GetUserIdAsync();
+            var newPost = await _postHandler.Add(model, authorId);
+            return CreatedAtAction("Get", newPost);
         }
 
         // PUT api/<UsersController>/5
         [HttpPut("{id}")]
-        [ProducesResponseType(typeof(UserModel), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(AuthorModel), StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> PutAsync(int id, [FromBody] PostInsertModel model)
         {
             if(!_postHandler.Exists(id))
                 return BadRequest("Post doesn't exist.");
 
-            var result = await _postHandler.Edit(id, model, User.Identity.Name);
+            var result = await _postHandler.Edit(id, model, await _userHandler.GetUserIdAsync());
 
             if (result != null)
                 return NoContent();
@@ -82,14 +78,15 @@ namespace Blog.API.Controllers
 
         // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
-        [ProducesResponseType(typeof(UserModel), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(AuthorModel), StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> Delete(int id)
         {
             if (!_postHandler.Exists(id))
                 return NotFound();
 
-            var statusCode = await _postHandler.Delete(id, User.Identity.Name);
+            var statusCode = await _postHandler.Delete(id, await _userHandler.GetUserIdAsync());
 
             if (statusCode == StatusCodes.Status204NoContent)
                 return NoContent();

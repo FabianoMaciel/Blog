@@ -19,7 +19,7 @@
                 @Html.DisplayNameFor(model => model.CreatedAt)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User)
+                @Html.DisplayNameFor(model => model.Author)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Post)
@@ -37,7 +37,7 @@
                 @Html.DisplayFor(modelItem => item.CreatedAt)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.User.Name)
+                @Html.DisplayFor(modelItem => item.Author.User.UserName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Post.Content)

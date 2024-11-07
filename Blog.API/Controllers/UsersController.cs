@@ -21,7 +21,7 @@ namespace Blog.API.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost("register")]
-        public async Task<IActionResult> Register(UserModel registerUser)
+        public async Task<IActionResult> Register(UserInsertModel registerUser)
         {
             if (!ModelState.IsValid) return ValidationProblem(ModelState);
 
@@ -45,47 +45,32 @@ namespace Blog.API.Controllers
         }
 
         // GET: api/<UsersController>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<UserModel>), StatusCodes.Status200OK)]
-        public async Task<IEnumerable<UserModel>> GetAsync()
+        [ProducesResponseType(typeof(IEnumerable<AuthorModel>), StatusCodes.Status200OK)]
+        public async Task<IEnumerable<AuthorModel>> GetAsync()
         {
             return await _userHandler.GetAll();
         }
 
         // GET api/<UsersController>/5
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(UserModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(AuthorModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetAsync(string id)
+        public async Task<IActionResult> GetAsync(int id)
         {
             var user = await _userHandler.Get(id);
-            if (string.IsNullOrWhiteSpace(id))
+            if (user == null)
                 return NotFound();
             else
                 return Ok(user);
         }
 
-
-        // PUT api/<UsersController>/5
-        [Authorize(Roles = "Admin")]
-        [HttpPut("{id}")]
-        [ProducesResponseType(typeof(UserModel), StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> PutAsync(int id, [FromBody] UserModel model)
-        {
-            if (!id.Equals(model.Id)) return BadRequest();
-
-             await _userHandler.Edit(model);
-
-            return NoContent();
-        }
-
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
-        [ProducesResponseType(typeof(UserModel), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(AuthorModel), StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Delete(int id)
         {

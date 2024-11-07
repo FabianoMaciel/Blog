@@ -1,8 +1,8 @@
 ﻿using Blog.Core.Models;
-using Blog.Data;
 using Core.Handlers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Core;
 
 namespace Blog.Web.Controllers
 {
@@ -50,7 +50,7 @@ namespace Blog.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Occupation,IsAdmin,DateOfBirth,CreatedAt")] UserModel model)
+        public async Task<IActionResult> Create([Bind("Id,Name,Occupation,IsAdmin,DateOfBirth,CreatedAt")] AuthorModel model)
         {
             if (ModelState.IsValid)
             {
@@ -84,7 +84,7 @@ namespace Blog.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Occupation,IsAdmin,DateOfBirth,CreatedAt")] UserModel model)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Occupation,IsAdmin,DateOfBirth,CreatedAt")] AuthorModel model)
         {
             if (!id.Equals(model.Id))
             {

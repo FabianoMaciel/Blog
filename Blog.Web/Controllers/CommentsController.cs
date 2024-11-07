@@ -46,7 +46,7 @@ namespace Blog.Web.Controllers
         public async Task<IActionResult> CreateAsync()
         {
             ViewData["PostId"] = new SelectList(await _postHandler.GetAll(), "Id", "Title");
-            ViewData["UserId"] = new SelectList(await _userHandler.GetAll(), "Id", "Name");
+            //ViewData["UserId"] = new SelectList(await _userHandler.GetAll(), "Id", "User.UserName");
             return View();
         }
 
@@ -55,7 +55,7 @@ namespace Blog.Web.Controllers
         public async Task<IActionResult> CreateAsync(int id)
         {
             ViewData["PostId"] = new SelectList(await _postHandler.GetAll(), "Id", "Title", id);
-            ViewData["UserId"] = new SelectList(await _userHandler.GetAll(), "Id", "Name");
+           // ViewData["UserId"] = new SelectList(await _userHandler.GetAll(), "Id", "User.UserName");
             return View();
         }
 
@@ -72,7 +72,7 @@ namespace Blog.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["PostId"] = new SelectList(await _postHandler.GetAll(), "Id", "Title", comment.PostId);
-            ViewData["UserId"] = new SelectList(await _userHandler.GetAll(), "Id", "Name", comment.UserId);
+            //ViewData["UserId"] = new SelectList(await _userHandler.GetAll(), "Id", "User.UserName", comment.AuthorId);
             return View(comment);
         }
 
@@ -86,7 +86,7 @@ namespace Blog.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
             ViewData["PostId"] = new SelectList(await _postHandler.GetAll(), "Id", "Title", comment.PostId);
-            ViewData["UserId"] = new SelectList(await _userHandler.GetAll(), "Id", "Name", comment.UserId);
+           // ViewData["UserId"] = new SelectList(await _userHandler.GetAll(), "Id", "User.UserName", comment.AuthorId);
             return View(comment);
         }
 
@@ -104,7 +104,7 @@ namespace Blog.Web.Controllers
                 return NotFound();
             }
             ViewData["PostId"] = new SelectList(await _postHandler.GetAll(), "Id", "Content", comment.PostId);
-            ViewData["UserId"] = new SelectList(await _userHandler.GetAll(), "Id", "Name", comment.UserId);
+            //ViewData["UserId"] = new SelectList(await _userHandler.GetAll(), "Id", "User.UserName", comment.AuthorId);
             return View(comment);
         }
 
@@ -139,8 +139,8 @@ namespace Blog.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PostId"] = new SelectList(await _postHandler.GetAll(), "Id", "TitleTitle", comment.PostId);
-            ViewData["UserId"] = new SelectList(await _userHandler.GetAll(), "Id", "Name", comment.UserId);
+            ViewData["PostId"] = new SelectList(await _postHandler.GetAll(), "Id", "Title", comment.PostId);
+           // ViewData["UserId"] = new SelectList(await _userHandler.GetAll(), "Id", "User.UserName", comment.AuthorId);
             return View(comment);
         }
 
