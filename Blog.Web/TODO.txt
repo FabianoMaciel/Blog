@@ -1,3 +1,0 @@
-﻿-Usuario login no MVC
--Adicionar comentarios na API
--Validacoes por usuario para exclusao e edicao de post ja foram feitas, falta apenas passar isso pro MVC com usuario logado
