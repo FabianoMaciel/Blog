@@ -26,6 +26,7 @@ builder.Services.AddScoped<ICommentHandler, CommentHandler>();
 builder.Services.AddScoped<IUserHandler, UserHandler>();
 builder.Services.AddScoped<IPostHandler, PostHandler>();
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -48,7 +49,9 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapRazorPages();
 
 app.UseDbMigrationHelper();
+
 
 app.Run();

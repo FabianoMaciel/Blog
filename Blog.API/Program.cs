@@ -9,12 +9,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Microsoft.AspNetCore.Server.IISIntegration;
+using System.Security.Claims;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(x =>
+   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+builder.Services.AddAuthentication(IISDefaults.AuthenticationScheme);
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(s =>
 {
@@ -60,6 +66,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>();
 
+builder.Services.Configure<IdentityOptions>(options => options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier);
+
 var JwtSettingsSection = builder.Configuration.GetSection("JWTSettings");
 builder.Services.Configure<JwtSettings>(JwtSettingsSection);
 
@@ -86,6 +94,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<IUserHandler, UserHandler>();
 builder.Services.AddScoped<IPostHandler, PostHandler>();
+builder.Services.AddScoped<ICommentHandler, CommentHandler>();
 
 var app = builder.Build();
 

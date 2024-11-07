@@ -1,5 +1,6 @@
 ﻿using Blog.Core.Models;
 using Core.Models;
+using System.Security.Claims;
 
 namespace Core.Handlers
 {
@@ -7,13 +8,15 @@ namespace Core.Handlers
     {
         Task<IEnumerable<AuthorModel>> GetAll();
         Task<AuthorModel> Add(AuthorModel model);
-        Task<AuthorModel> Get(string id);
-        Task<AuthorModel> Edit(AuthorModel model);
+        Task<AuthorModel> Get(int id);
         bool Exists(int id);
         Task Delete(int id);
-
         Task<string> Register(UserInsertModel registerUser);
 
         Task<string> Login(LoginModel login);
+        bool IsAdmin();
+        Task<bool> IsAllowedAsync(string? authorId);
+        Task<string> GetUserIdAsync();
+        bool IsAuthenticated();
     }
 }

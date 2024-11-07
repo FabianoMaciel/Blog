@@ -1,0 +1,20 @@
+﻿@model IEnumerable<Blog.Core.Models.PostModel>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@foreach (var item in Model)
+{
+    <div class="text-center">
+        <div class="card" style="width: 80rem;">
+            <div class="card-body">
+                <h5 class="card-title">@item.Title</h5>
+                <h6 class="card-subtitle mb-2 text-muted">@item.CreatedAt</h6>
+                <p class="card-text">@item.Content</p>
+                <a asp-action="Details" asp-controller="Posts" asp-route-id="@item.Id" class="card-link">Details</a>
+                <span>@item.Comments.Count Comments </span><a asp-action="Create" asp-controller="Comments" asp-route-id="@item.Id" class="card-link">Add</a>
+            </div>
+        </div>
+    </div>
+}

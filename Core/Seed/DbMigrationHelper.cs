@@ -44,9 +44,10 @@ public static class DbMigrationHelper
 
         var hasher = new PasswordHasher<IdentityUser>();
 
+
         var admin = new IdentityUser
         {
-            Id = "1",
+            Id = Guid.NewGuid().ToString(),
             Email = "admin@blog.com",
             EmailConfirmed = true,
             NormalizedEmail = "ADMIN@BLOG.COM",
@@ -59,7 +60,7 @@ public static class DbMigrationHelper
 
         var user2 = new IdentityUser
         {
-            Id = "2",
+            Id = Guid.NewGuid().ToString(),
             Email = "fabiano@blog.com",
             EmailConfirmed = true,
             NormalizedEmail = "FABIANO@BLOG.COM",
@@ -72,7 +73,7 @@ public static class DbMigrationHelper
 
         var user3 = new IdentityUser
         {
-            Id = "3",
+            Id = Guid.NewGuid().ToString(),
             Email = "nelson@blog.com",
             EmailConfirmed = true,
             NormalizedEmail = "NELSON@BLOG.COM",
@@ -96,7 +97,6 @@ public static class DbMigrationHelper
             RoleId = "1",
             UserId = admin.Id
         });
-
 
         await context.Users.AddAsync(admin);
         var authorAdmin = new Entities.Author { User = admin };
