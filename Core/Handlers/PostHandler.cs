@@ -54,6 +54,7 @@ namespace Core.Handlers
         {
             var entity = await _context.Posts
                 .Include(p => p.Author)
+                .Include(p => p.Comments)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             var model = _mapper.Map<PostModel>(entity);

@@ -38,3 +38,15 @@
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+<div>
+    <h3>Comments: </h3>
+    @foreach (var item in Model.Comments)
+    {
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => item.Content) 
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => item.Content)
+        </dd>
+    }
+</div>
