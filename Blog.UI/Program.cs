@@ -20,8 +20,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => 
-{ options.SignIn.RequireConfirmedAccount = false; 
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false;
     options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier;
 }).AddRoles<IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
 
