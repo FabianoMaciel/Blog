@@ -23,7 +23,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => 
 { options.SignIn.RequireConfirmedAccount = false; 
     options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier;
-}).AddEntityFrameworkStores<AppDbContext>();
+}).AddRoles<IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ICommentHandler, CommentHandler>();
