@@ -1,6 +1,5 @@
 ﻿using Blog.Core.Models;
 using Core.Models;
-using System.Security.Claims;
 
 namespace Core.Handlers
 {

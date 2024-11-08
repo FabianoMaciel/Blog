@@ -1,7 +1,6 @@
 ﻿using Blog.Core.Models;
 using Core.Handlers;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.API.Controllers
