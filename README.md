@@ -1,11 +1,3 @@
-# *** NOTE PARA EDUARD - TO DO:
-1 - Usar Sqlite (retestar tudo)
-
-2 - Melhorar a UI um pouco
-
-3 - adicionar a opcao de excluir comentario da UI se usuario tiver permissao
-
-
 # **Blog Módulo 1 - Aplicação de Blog Simples com MVC e API RESTful**
 
 ## **1. Apresentação**
