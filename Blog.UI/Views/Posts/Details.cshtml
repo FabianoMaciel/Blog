@@ -47,7 +47,7 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => item.Content)
-            <a asp-action="Delete" asp-controller="Comments" asp-route-id="@item.Id" class="card-link">Delete</a>
+            <a asp-action="Delete" asp-controller="Comments" asp-route-id="@item.Id" class="card-link"><i class="bi bi-trash"></i></a>
         </dd>
         
     }
