@@ -30,8 +30,8 @@ namespace Blog.API.Controllers
             if (!_postHandler.Exists(postId))
                 return NotFound();
 
-            var post = await _commentHandler.GetCommentsByPost(postId);
-            return Ok(post);
+            var comments = await _commentHandler.GetCommentsByPost(postId);
+            return Ok(comments);
         }
 
         [HttpPost]

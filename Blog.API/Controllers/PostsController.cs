@@ -2,9 +2,6 @@
 using Core.Handlers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Blog.API.Controllers
 {
@@ -22,7 +19,6 @@ namespace Blog.API.Controllers
             _postHandler = postHandler;
         }
 
-        // GET: api/<UsersController>
         [AllowAnonymous]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<PostModel>), StatusCodes.Status200OK)]
@@ -31,7 +27,6 @@ namespace Blog.API.Controllers
             return await _postHandler.GetAll(true);
         }
 
-        // GET api/<UsersController>/5
         [AllowAnonymous]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(AuthorModel), StatusCodes.Status200OK)]
@@ -45,7 +40,6 @@ namespace Blog.API.Controllers
                 return Ok(post);
         }
 
-        // POST api/<UsersController>
         [HttpPost]
         [ProducesResponseType(typeof(AuthorModel), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -57,7 +51,6 @@ namespace Blog.API.Controllers
             return CreatedAtAction("Get", newPost);
         }
 
-        // PUT api/<UsersController>/5
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(AuthorModel), StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -65,7 +58,7 @@ namespace Blog.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> PutAsync(int id, [FromBody] PostInsertModel model)
         {
-            if(!_postHandler.Exists(id))
+            if (!_postHandler.Exists(id))
                 return BadRequest("Post doesn't exist.");
 
             var result = await _postHandler.Edit(id, model, await _userHandler.GetUserIdAsync());
@@ -76,7 +69,6 @@ namespace Blog.API.Controllers
                 return Forbid();
         }
 
-        // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(AuthorModel), StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

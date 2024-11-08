@@ -78,6 +78,10 @@ namespace Core.Handlers
             };
 
             var result = await _userManager.CreateAsync(user, registerUser.Password);
+
+            if (!result.Succeeded)
+                return string.Join('|', result.Errors.Select(a => a.Description));
+
             if (registerUser.IsAdmin)
             {
                 await _userManager.AddToRoleAsync(user, "ADMIN");

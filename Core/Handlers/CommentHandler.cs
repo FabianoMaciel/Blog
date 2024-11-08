@@ -56,7 +56,11 @@ namespace Core.Handlers
                 .Include(c => c.Post)
                 .Include(c => c.Author)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            return _mapper.Map<CommentModel>(entity);
+            var model = _mapper.Map<CommentModel>(entity);
+
+            model.IsUserAllowedToEdit = await _userHandler.IsAllowedAsync(model.AuthorId);
+
+            return model;
         }
 
         public async Task<CommentModel> Edit(CommentModel model)

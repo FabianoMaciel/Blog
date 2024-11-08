@@ -11,5 +11,6 @@ namespace Blog.Core.Models
         public string AuthorId { get; set; }
         public PostModel Post { get; set; }
         public int PostId { get; set; }
+        public bool IsUserAllowedToEdit { get;set; }
     }
 }

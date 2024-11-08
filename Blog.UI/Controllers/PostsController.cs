@@ -18,13 +18,11 @@ namespace Blog.Web.Controllers
             _userHandler = userHandler;
         }
 
-        // GET: Posts
         public async Task<IActionResult> Index()
         {
             return View(await _postHandler.GetAll());
         }
 
-        // GET: Posts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -41,7 +39,6 @@ namespace Blog.Web.Controllers
             return View(post);
         }
 
-        // GET: Posts/Create
         [Authorize]
         public async Task<IActionResult> CreateAsync()
         {
@@ -49,23 +46,19 @@ namespace Blog.Web.Controllers
             return View();
         }
 
-        // POST: Posts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Content,CreatedAt,AutorId")] PostInsertModel model)
         {
             if (ModelState.IsValid)
             {
-                await _postHandler.Add(model, string.Empty);
+                await _postHandler.Add(model, await _userHandler.GetUserIdAsync());
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["AutorId"] = new SelectList(await _userHandler.GetAll(), "Id", "Name", model.AutorId);
+
             return View(model);
         }
 
-        // GET: Posts/Edit/5
         [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -84,9 +77,6 @@ namespace Blog.Web.Controllers
             return View(post);
         }
 
-        // POST: Posts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Title,Content")] PostInsertModel post)
@@ -100,7 +90,7 @@ namespace Blog.Web.Controllers
             {
                 try
                 {
-                    await _postHandler.Edit(id, post, string.Empty);//to do fabiano passar logged user
+                    await _postHandler.Edit(id, post, await _userHandler.GetUserIdAsync());
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -115,11 +105,10 @@ namespace Blog.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["AutorId"] = new SelectList(await _userHandler.GetAll(), "Id", "Name", post.AutorId);
+
             return View(post);
         }
 
-        // GET: Posts/Delete/5
         [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -137,12 +126,11 @@ namespace Blog.Web.Controllers
             return View(post);
         }
 
-        // POST: Posts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _postHandler.Delete(id, string.Empty);// to do Fabiano logged user
+            await _postHandler.Delete(id, await _userHandler.GetUserIdAsync());
             return RedirectToAction(nameof(Index));
         }
     }

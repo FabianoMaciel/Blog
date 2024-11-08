@@ -3,9 +3,7 @@ using Core.Handlers;
 using Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Blog.API.Controllers
 {
@@ -15,7 +13,7 @@ namespace Blog.API.Controllers
     {
         private readonly IUserHandler _userHandler;
         public UsersController(IUserHandler userHandler)
-        { 
+        {
             _userHandler = userHandler;
         }
 
@@ -44,7 +42,6 @@ namespace Blog.API.Controllers
             return Problem($"User or password incorrect.");
         }
 
-        // GET: api/<UsersController>
         [Authorize(Roles = "admin")]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<AuthorModel>), StatusCodes.Status200OK)]
@@ -53,7 +50,6 @@ namespace Blog.API.Controllers
             return await _userHandler.GetAll();
         }
 
-        // GET api/<UsersController>/5
         [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(AuthorModel), StatusCodes.Status200OK)]
@@ -68,7 +64,6 @@ namespace Blog.API.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(AuthorModel), StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -77,7 +72,7 @@ namespace Blog.API.Controllers
             if (!_userHandler.Exists(id))
                 return NotFound();
 
-           await  _userHandler.Delete(id);
+            await _userHandler.Delete(id);
 
             return NoContent();
         }
